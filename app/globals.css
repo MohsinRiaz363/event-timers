@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+:root {
+    --background: #ffffff;
+    --foreground: #171717;
+
+    --site-1: #0b2f26; /* deep emerald (header/footer) */
+    --site-2: #0f5e4a; /* emerald (buttons/secondary blocks) */
+    --site-3: #f6f3ea; /* warm ivory (cards/surfaces) */
+    --site-4: #d4af37; /* gold accent (highlights) */
+    --site-5: #111827; /* charcoal (text / strong contrast) */
+    --bg-url: url("/endless-constellation.svg");
+
+    --site-border: rgba(17, 24, 39, 0.1);
+    --site-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+}
+
+.site-color-1 {
+    background-color: var(--site-1);
+}
+.site-color-2 {
+    background-color: var(--site-2);
+}
+.site-color-3 {
+    background-color: var(--site-3);
+}
+.site-color-4 {
+    background-color: var(--site-4);
+}
+.site-color-5 {
+    background-color: var(--site-5);
+}
+
+/* Background: dark, calm, with subtle “gold glow” (no busy neon) */
+.site-background {
+    background:
+        radial-gradient(
+            circle at 18% 10%,
+            rgba(212, 175, 55, 0.18),
+            transparent 40%
+        ),
+        radial-gradient(
+            circle at 85% 15%,
+            rgba(15, 94, 74, 0.35),
+            transparent 45%
+        ),
+        linear-gradient(135deg, #051f19 0%, #0b2f26 55%, #061a15 100%);
+}
+
+/* Optional: make your main card feel premium */
+.site-surface {
+    border: 1px solid var(--site-border);
+    box-shadow: var(--site-shadow);
+    color: var(--site-5);
+}
+
+.svg-background {
+    background-image: var(--bg-url);
+}
+
+/* Optional: tiny accent utility if you want */
+.site-accent-text {
+    color: var(--site-4);
+}
+.site-border {
+    border: 1px solid var(--site-border);
+}
+
+@theme inline {
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans);
+    --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+    }
+}
+
+body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+@layer utilities {
+    .perspective-1000 {
+        perspective: 1000px;
+    }
+    .preserve-3d {
+        transform-style: preserve-3d;
+    }
+    .backface-hidden {
+        backface-visibility: hidden;
+    }
+    .rotate-x-180 {
+        transform: rotateX(180deg);
+    }
+}
