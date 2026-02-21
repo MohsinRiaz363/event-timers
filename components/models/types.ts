@@ -16,6 +16,8 @@ export interface ProcessedEvent extends TimerEvent {
 }
 
 export interface TimerConfig {
+  mode: string;
+  siteTitle: string;
   title: string;
   timezone: string;
   urduMode?: boolean; // Add this

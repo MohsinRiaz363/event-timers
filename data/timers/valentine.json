@@ -1,0 +1,27 @@
+{
+  "siteTitle": "Will you be my valentine?",
+  "title": "Valentine's Day 2027",
+  "timezone": "UTC",
+  "urduMode": false,
+  "backgroundUrl": "/heart-bg.png",
+  "theme": {
+    "site-1": "rgba(255, 30, 86, 0.25)",
+    "site-2": "rgba(144, 12, 63, 0.45)",
+    "site-3": "#120105",
+    "site-4": "#22020a",
+    "site-5": "#000000"
+  },
+  "grace": {
+    "minutes": 1440,
+    "messages": {
+      "Valentine": "Happy Valentine's Day! ❤️ Wishing you a day filled with love and joy."
+    }
+  },
+  "events": [
+    {
+      "id": "v-day-2027",
+      "name": "Valentine",
+      "time": "2027-02-14 00:00"
+    }
+  ]
+}

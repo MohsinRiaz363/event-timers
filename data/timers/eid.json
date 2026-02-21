@@ -1,0 +1,27 @@
+{
+  "siteTitle": "Eid Ul Fitr",
+  "title": "Eid 2026",
+  "timezone": "UTC",
+  "urduMode": false,
+  "backgroundUrl": "/islamic-bg.jpg",
+  "theme": {
+    "site-1": "#BE5323",
+    "site-2": "#CD9B25",
+    "site-3": "#237023",
+    "site-4": "#151514",
+    "site-5": "#2D3D82"
+  },
+  "grace": {
+    "minutes": 1440,
+    "messages": {
+      "Eid": "Happy Eid! Wishing you a day filled with love and joy."
+    }
+  },
+  "events": [
+    {
+      "id": "e-day-2026",
+      "name": "Eid",
+      "time": "2026-03-20 00:00"
+    }
+  ]
+}

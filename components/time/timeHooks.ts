@@ -3,7 +3,6 @@ import { useState, useEffect, useMemo } from "react";
 import { TimerEvent, ProcessedEvent, TimeLeft } from "../models/types";
 
 const getUtcTimestamp = (dateStr: string, timeZone: string): number => {
-  // Compatibility fix: replaces space with 'T' for ISO parsing
   const date = new Date(dateStr.replace(" ", "T"));
   return new Date(date.toLocaleString("en-US", { timeZone })).getTime();
 };

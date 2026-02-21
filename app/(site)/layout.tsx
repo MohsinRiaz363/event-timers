@@ -30,7 +30,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased flex flex-col min-h-screen svg-background`}
       >
         <Header />
-        <main className="flex-1 py-10">{children}</main>
+        <main className="flex-1 flex flex-col items-center justify-center">
+          {children}
+        </main>
         <Footer />
       </body>
     </html>
