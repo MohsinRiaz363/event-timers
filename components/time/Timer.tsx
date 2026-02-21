@@ -29,14 +29,13 @@ interface TimerProps {
 export default function Timer({ config, serverTimeMs }: TimerProps) {
   const { title, timezone, events, theme, backgroundUrl } = config;
 
-  // Use our optimized engine
-  const { timeLeft, currentEvent, nextEvent } = useTimerEngine(
+  // Added isGracePeriod from your updated hook
+  const { timeLeft, currentEvent, nextEvent, isGracePeriod } = useTimerEngine(
     events,
     serverTimeMs,
     timezone,
   );
 
-  // Inject JSON colors into CSS variables for the background gradients
   const dynamicStyles = {
     "--site-1": theme?.["site-1"],
     "--site-2": theme?.["site-2"],
@@ -45,6 +44,16 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
     "--site-5": theme?.["site-5"],
     "--bg-url": backgroundUrl ? `url("${backgroundUrl}")` : undefined,
   } as React.CSSProperties;
+
+  // Helper to provide context-aware messages
+  const getGraceMessage = (name: string) => {
+    const n = name.toLowerCase();
+    if (n.includes("sehr"))
+      return "Time for Sehr has ended. You should start fasting now.";
+    if (n.includes("iftar"))
+      return "It's time for Iftar. Please break your fast.";
+    return `${name} has started.`;
+  };
 
   if (!currentEvent) {
     return (
@@ -58,7 +67,6 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
     <div className="flex flex-col items-center gap-2">
       <div className="flex gap-1">
         {val.split("").map((d, i) => (
-          // Fixed Key: Position-based to allow FlipDigit to animate prop changes
           <FlipDigit key={`${label}-${i}`} digit={d} />
         ))}
       </div>
@@ -71,7 +79,7 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
   return (
     <div
       style={dynamicStyles}
-      className="site-background svg-background w-full flex flex-col items-center justify-center p-6 transition-all duration-1000"
+      className="site-background svg-background w-full min-h-screen flex flex-col items-center justify-center p-6 transition-all duration-1000"
     >
       <div className="flex flex-col items-center gap-10 p-12 bg-black/40 backdrop-blur-3xl rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-4xl transition-all">
         {/* Header Section */}
@@ -83,7 +91,7 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
             {currentEvent.name}
           </h3>
           <p className="text-sm text-neutral-400">
-            Ends at:{" "}
+            {isGracePeriod ? "Started at: " : "Ends at: "}
             <span className="text-neutral-200">
               {formatTimeDisplay(currentEvent.time)}
             </span>
@@ -91,12 +99,25 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
           </p>
         </div>
 
-        {/* The Flip Clock Section */}
-        <div className="flex flex-wrap justify-center gap-4 md:gap-8">
-          {renderUnit(timeLeft.days, "Days")}
-          {renderUnit(timeLeft.hours, "Hours")}
-          {renderUnit(timeLeft.minutes, "Minutes")}
-          {renderUnit(timeLeft.seconds, "Seconds")}
+        {/* Dynamic Section: Show Message or Flip Clock */}
+        <div className="w-full flex justify-center min-h-30 items-center">
+          {isGracePeriod ? (
+            <div className="animate-pulse text-center px-8 py-6 rounded-2xl bg-emerald-500/10 border border-emerald-500/20">
+              <p className="text-xl md:text-2xl font-medium text-emerald-400 leading-relaxed">
+                {getGraceMessage(currentEvent.name)}
+              </p>
+              <p className="mt-2 text-[10px] uppercase tracking-widest text-emerald-500/50">
+                Next timer starts in ~20 minutes
+              </p>
+            </div>
+          ) : (
+            <div className="flex flex-wrap justify-center gap-4 md:gap-8">
+              {renderUnit(timeLeft.days, "Days")}
+              {renderUnit(timeLeft.hours, "Hours")}
+              {renderUnit(timeLeft.minutes, "Minutes")}
+              {renderUnit(timeLeft.seconds, "Seconds")}
+            </div>
+          )}
         </div>
 
         {/* Footer / Next Event Section */}
@@ -114,10 +135,6 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
           </div>
         )}
       </div>
-
-      {/*<p className="mt-8 text-[10px] text-white/20 uppercase tracking-[0.5em] font-medium">
-        Powered by LoveLetter Timer Engine
-      </p>*/}
     </div>
   );
 }

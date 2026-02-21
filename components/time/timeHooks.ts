@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo } from "react";
 import { TimerEvent, ProcessedEvent, TimeLeft } from "../models/types";
 
 const getUtcTimestamp = (dateStr: string, timeZone: string): number => {
+  // Handle the space to T conversion for Safari/Mobile compatibility
   const date = new Date(dateStr.replace(" ", "T"));
   return new Date(date.toLocaleString("en-US", { timeZone })).getTime();
 };
@@ -19,18 +20,23 @@ export const useTimerEngine = (
     return () => clearInterval(timer);
   }, []);
 
+  // We use minuteStamp to prevent the heavy 'filter/sort' from running every second.
   const minuteStamp = Math.floor(nowMs / 60000);
 
-  // Explicitly type the return as ProcessedEvent or null
   const { currentEvent, nextEvent } = useMemo(() => {
-    const referenceTime = minuteStamp * 60000;
+    // 20 minute buffer in milliseconds
+    const BUFFER_MS = 20 * 60 * 1000;
+
+    // The trick: We look for events that are still "upcoming" relative to 20 mins ago
+    const referenceTimeWithDelay = minuteStamp * 60000 - BUFFER_MS;
 
     const sorted: ProcessedEvent[] = events
       .map((e) => ({
         ...e,
         ts: getUtcTimestamp(e.time, timeZone),
       }))
-      .filter((e) => e.ts > referenceTime)
+      // Keep event until it is older than the current time MINUS 20 minutes
+      .filter((e) => e.ts > referenceTimeWithDelay)
       .sort((a, b) => a.ts - b.ts);
 
     return {
@@ -40,11 +46,12 @@ export const useTimerEngine = (
   }, [events, minuteStamp, timeZone]);
 
   const timeLeft: TimeLeft = useMemo(() => {
-    // No more 'any' needed here
     if (!currentEvent) {
       return { days: "00", hours: "00", minutes: "00", seconds: "00" };
     }
 
+    // Math.max(0, ...) ensures that once the time hits 0, it stays at 0
+    // for the remainder of the 20-minute delay window.
     const diff = Math.max(0, currentEvent.ts - nowMs);
 
     return {
@@ -63,5 +70,10 @@ export const useTimerEngine = (
     };
   }, [currentEvent, nowMs]);
 
-  return { timeLeft, currentEvent, nextEvent, nowMs };
+  const isGracePeriod = useMemo(() => {
+    if (!currentEvent) return false;
+    return nowMs >= currentEvent.ts;
+  }, [currentEvent, nowMs]);
+
+  return { timeLeft, currentEvent, nextEvent, nowMs, isGracePeriod };
 };
