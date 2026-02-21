@@ -100,3 +100,21 @@ body {
         transform: rotateX(180deg);
     }
 }
+
+@font-face {
+    font-family: "UrduFont";
+    /* Make sure the filename matches exactly what is in your public/fonts folder */
+    src: url("/fonts/kasheeda.ttf") format("truetype");
+    font-display: swap;
+    font-weight: normal;
+    font-style: normal;
+}
+
+/* Base class for Urdu layout */
+.urdu-text {
+    font-family: "UrduFont", serif;
+    direction: rtl;
+    /* Urdu needs slightly more line height and tracking for readability */
+    line-height: 1.6;
+    letter-spacing: 0;
+}
