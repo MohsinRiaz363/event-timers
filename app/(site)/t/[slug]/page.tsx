@@ -3,6 +3,7 @@ import path from "path";
 import { notFound } from "next/navigation";
 import Timer from "@/components/time/Timer";
 import { getServerTime } from "@/components/actions/time";
+import EventList from "@/components/list/EventList";
 
 export default async function TimerPage({
   params,
@@ -23,5 +24,10 @@ export default async function TimerPage({
     notFound();
   }
 
-  return <Timer config={config} serverTimeMs={serverTimeMs} />;
+  return (
+    <>
+      <Timer config={config} serverTimeMs={serverTimeMs} />
+      <EventList config={config} />
+    </>
+  );
 }

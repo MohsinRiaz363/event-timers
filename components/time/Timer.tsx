@@ -12,23 +12,14 @@ interface TimerProps {
 }
 
 export default function Timer({ config, serverTimeMs }: TimerProps) {
-  const {
-    title,
-    timezone,
-    events,
-    theme,
-    backgroundUrl,
-    urduMode,
-    grace,
-    siteTitle,
-    mode,
-  } = config;
+  const { title, timezone, events, theme, backgroundUrl, urduMode, grace } =
+    config;
 
   const setSiteTitle = useAppStore((state) => state.setSiteTitle);
   const setUrduMode = useAppStore((state) => state.setUrduMode);
+  const setActiveEventId = useAppStore((state) => state.setActiveEventId);
 
   const graceMinutes = grace?.minutes || 20;
-
   const { timeLeft, currentEvent, nextEvent, isGracePeriod } = useTimerEngine(
     events,
     serverTimeMs,
@@ -36,11 +27,16 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
     graceMinutes,
   );
 
-  const isUrduActive = urduMode || mode === "ur";
+  const isUrduActive = urduMode || config.mode === "ur";
 
   useEffect(() => {
     if (config.siteTitle) setSiteTitle(config.siteTitle);
     setUrduMode(!!isUrduActive);
+
+    // Sync active ID to store for the EventList to use
+    if (currentEvent?.id) {
+      setActiveEventId(currentEvent.id);
+    }
 
     const root = document.documentElement;
     if (theme) {
@@ -67,6 +63,8 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
     isUrduActive,
     setSiteTitle,
     setUrduMode,
+    currentEvent?.id,
+    setActiveEventId,
   ]);
 
   const getGraceMessage = (name: string) =>
@@ -75,10 +73,9 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
   if (!currentEvent) return null;
 
   const renderUnit = (val: string, label: string) => (
-    /* basis-[45%] on mobile ensures 2 items per row with room for gaps */
-    <div className="flex flex-col items-center basis-[45%] md:basis-auto">
+    <div className="flex flex-col items-center">
       <div
-        className="flex gap-0.5 sm:gap-1 scale-90 sm:scale-100 origin-center"
+        className="flex gap-0.5 sm:gap-1 scale-[0.85] xs:scale-100 origin-center"
         dir="ltr"
       >
         {val.split("").map((d, i) => (
@@ -93,12 +90,12 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
 
   return (
     <div
-      className={`site-background svg-background w-full  flex flex-col items-center justify-center p-4 sm:p-6 transition-all duration-1000 ${isUrduActive ? "urdu-text" : ""}`}
+      className={`site-background svg-background w-full flex flex-col items-center justify-center p-4 sm:p-6 transition-all duration-1000 ${isUrduActive ? "urdu-text" : ""}`}
     >
-      <div className="flex flex-col items-center gap-8 sm:gap-10 p-6 sm:p-12 bg-black/40 backdrop-blur-3xl rounded-[2rem] sm:rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-4xl transition-all overflow-hidden">
+      <div className="flex flex-col items-center gap-8 sm:gap-10 p-6 sm:p-12 bg-black/40 backdrop-blur-3xl rounded-bl-4xl sm:rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-360 transition-all overflow-hidden">
         {/* Header */}
         <div className="text-center text-white">
-          <h2 className="text-[10px] sm:text-xs font-black text-(--accent) uppercase tracking-[0.3em] mb-3 opacity-80">
+          <h2 className="text-[10px] sm:text-sm md:text-lg font-black text-(--site-4) uppercase tracking-[0.3em] mb-3 opacity-80">
             {title}
           </h2>
           <h3
@@ -106,29 +103,31 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
           >
             {currentEvent.name}
           </h3>
-          <p className="text-sm sm:text-no text-neutral-400" dir="ltr">
+          <p className="text-lg text-(--site-4)" dir="ltr">
             {isGracePeriod ? "Started at: " : "Ends at: "}
             <span className="text-neutral-200">
               {formatTimeDisplay(currentEvent.time)}
             </span>
-            <span className="ml-2 opacity-30">({timezone})</span>
+            <span className="ml-2 text-(--site-4) opacity-70">
+              ({timezone})
+            </span>
           </p>
         </div>
 
         {/* The Clock Section */}
         <div className="w-full flex justify-center items-center">
           {isGracePeriod ? (
-            <div className="animate-pulse text-center px-4 py-6 rounded-2xl bg-[var(--accent)]/5 border border-[var(--accent)]/20 w-full max-w-2xl">
+            /* FIXED: Corrected the brackets for the variables here */
+            <div className="animate-pulse text-center px-4 py-6 rounded-2xl bg-(--accent)/5 border border-(--accent)/20 w-full max-w-2xl">
               <p
-                className={`text-[var(--accent)] leading-relaxed ${isUrduActive ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl font-medium"}`}
+                className={`text-(--accent) leading-relaxed ${isUrduActive ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl font-medium"}`}
               >
                 {getGraceMessage(currentEvent.name)}
               </p>
             </div>
           ) : (
-            /* We use justify-center on mobile to keep the 2x2 grid centered */
             <div
-              className="flex flex-wrap w-full justify-center md:justify-between items-start gap-y-10 gap-x-2 sm:gap-x-8"
+              className="grid grid-cols-2 md:grid-cols-4 gap-y-10 place-items-center"
               dir="ltr"
             >
               {renderUnit(timeLeft.days, "Days")}
@@ -145,8 +144,8 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
             className={`w-full pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center px-2 sm:px-6 gap-6 text-[11px] sm:text-sm text-neutral-500 ${isUrduActive ? "sm:flex-row-reverse" : ""}`}
           >
             <div className="flex items-center gap-2">
-              <span className="uppercase tracking-tighter opacity-60">
-                {isUrduActive ? ":اگلا ایونٹ" : "Up Next:"}
+              <span className="uppercase tracking-tighter text-(--site-4)">
+                {isUrduActive ? "آگے:" : "Up Next:"}
               </span>
               <b className="text-neutral-300">{nextEvent.name}</b>
             </div>

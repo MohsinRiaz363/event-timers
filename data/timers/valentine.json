@@ -1,6 +1,6 @@
 {
   "siteTitle": "Will you be my valentine?",
-  "title": "Valentine's Day 2027",
+  "title": "February 14, 2027",
   "timezone": "UTC",
   "urduMode": false,
   "backgroundUrl": "/heart-bg.png",
@@ -8,7 +8,7 @@
     "site-1": "rgba(255, 30, 86, 0.25)",
     "site-2": "rgba(144, 12, 63, 0.45)",
     "site-3": "#120105",
-    "site-4": "#22020a",
+    "site-4": "#DA70D6",
     "site-5": "#000000"
   },
   "grace": {
@@ -20,7 +20,7 @@
   "events": [
     {
       "id": "v-day-2027",
-      "name": "Valentine",
+      "name": "Valentine's Day",
       "time": "2027-02-14 00:00"
     }
   ]

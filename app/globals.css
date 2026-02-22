@@ -4,17 +4,19 @@
     --background: #ffffff;
     --foreground: #171717;
 
-    --site-1: #0b2f26; /* deep emerald (header/footer) */
-    --site-2: #0f5e4a; /* emerald (buttons/secondary blocks) */
-    --site-3: #f6f3ea; /* warm ivory (cards/surfaces) */
-    --site-4: #d4af37; /* gold accent (highlights) */
-    --site-5: #111827; /* charcoal (text / strong contrast) */
+    /* These are your default fallbacks */
+    --site-1: #0b2f26;
+    --site-2: #0f5e4a;
+    --site-3: #f6f3ea;
+    --site-4: #d4af37;
+    --site-5: #111827;
     --bg-url: url("/endless-constellation.svg");
 
     --site-border: rgba(17, 24, 39, 0.1);
     --site-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
 }
 
+/* Base Utility Classes */
 .site-color-1 {
     background-color: var(--site-1);
 }
@@ -31,12 +33,11 @@
     background-color: var(--site-5);
 }
 
-/* Update this in global.css */
-/* Update in globals.css */
 .site-background {
-    /* site-5 is usually your darkest/base color */
+    /* Base color fallback */
     background-color: var(--site-5);
 
+    /* Dynamic Gradients */
     background-image:
         radial-gradient(circle at 18% 10%, var(--site-1), transparent 60%),
         radial-gradient(circle at 85% 15%, var(--site-2), transparent 70%),
@@ -48,30 +49,33 @@
         );
 
     background-attachment: fixed;
-    /* This ensures the gradients "pop" more against the dark base */
     background-blend-mode: normal;
 }
 
-/* Ensure the SVG pattern sits on top of the colors */
+/* SVG Overlay */
 .svg-background {
     background-image: var(--bg-url);
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
 }
 
-/* Optional: make your main card feel premium */
+/* UI Surfaces */
 .site-surface {
     border: 1px solid var(--site-border);
     box-shadow: var(--site-shadow);
     color: var(--site-5);
 }
 
-/* Optional: tiny accent utility if you want */
 .site-accent-text {
     color: var(--site-4);
 }
+
 .site-border {
     border: 1px solid var(--site-border);
 }
 
+/* Tailwind Theme Mapping */
 @theme inline {
     --color-background: var(--background);
     --color-foreground: var(--foreground);
@@ -92,6 +96,7 @@ body {
     font-family: Arial, Helvetica, sans-serif;
 }
 
+/* Flip Clock Logic */
 @layer utilities {
     .perspective-1000 {
         perspective: 1000px;
@@ -107,20 +112,31 @@ body {
     }
 }
 
+/* Urdu Typography */
 @font-face {
     font-family: "UrduFont";
-    /* Make sure the filename matches exactly what is in your public/fonts folder */
     src: url("/fonts/Kasheeda.ttf") format("truetype");
     font-display: swap;
     font-weight: normal;
     font-style: normal;
 }
 
-/* Base class for Urdu layout */
 .urdu-text {
     font-family: "UrduFont", serif;
     direction: rtl;
-    /* Urdu needs slightly more line height and tracking for readability */
     line-height: 1.8;
     letter-spacing: 0;
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--site-4);
+    border-radius: 10px;
+    opacity: 0.5;
 }

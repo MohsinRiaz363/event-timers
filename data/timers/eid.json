@@ -1,13 +1,13 @@
 {
   "siteTitle": "Eid Ul Fitr",
-  "title": "Eid 2026",
+  "title": "Expected Date 20 March 2026",
   "timezone": "UTC",
   "urduMode": false,
   "backgroundUrl": "/islamic-bg.jpg",
   "theme": {
     "site-1": "#BE5323",
     "site-2": "#CD9B25",
-    "site-3": "#237023",
+    "site-3": "#FFFFFF",
     "site-4": "#151514",
     "site-5": "#2D3D82"
   },

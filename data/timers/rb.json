@@ -1,6 +1,6 @@
 {
   "urduMode": true,
-  "siteTitle": "رمضان ٹائمر",
+  "siteTitle": "رمضان",
   "title": "رمضان سحر و افطار ٹائمر",
   "timezone": "Asia/Karachi",
   "backgroundUrl": "/endless-constellation.svg",
@@ -8,7 +8,7 @@
     "site-1": "rgba(212, 175, 55, 0.70)",
     "site-2": "rgba(15, 94, 74, 0.70)",
     "site-3": "#051f19",
-    "site-4": "#0b2f26",
+    "site-4": "#FFD700",
     "site-5": "#061a15"
   },
   "grace": {
