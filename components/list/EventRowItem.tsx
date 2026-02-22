@@ -7,7 +7,7 @@ interface EventRowProps {
   leftEvent: { name: string; time: string; id: string };
   rightEvent?: { name: string; time: string; id: string };
   isActive: boolean;
-  isUrdu: boolean;
+  isUrdu: boolean | undefined;
 }
 
 export default function EventRowItem({
