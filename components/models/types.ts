@@ -19,8 +19,9 @@ export interface TimerConfig {
   mode: string;
   siteTitle: string;
   title: string;
+  dayTitle?: string;
   timezone: string;
-  urduMode?: boolean; // Add this
+  urduMode?: boolean;
   backgroundUrl?: string;
   theme?: any;
   grace?: {

@@ -1,43 +1,62 @@
 @import "tailwindcss";
 
+@theme inline {
+    /* System Defaults */
+    --color-background: var(--background);
+    --color-foreground: var(--foreground);
+    --font-sans: var(--font-geist-sans), ui-sans-serif, system-ui;
+    --font-mono: var(--font-geist-mono), ui-monospace, SFMono-Regular;
+
+    /* Site Palette Mapping */
+    --color-site-1: var(--site-1);
+    --color-site-2: var(--site-2);
+    --color-site-3: var(--site-3);
+    --color-site-4: var(--site-4);
+    --color-site-5: var(--site-5);
+
+    /* Animations & Utilities */
+    --animate-pulse-slow: pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
 :root {
+    /* Core Colors */
     --background: #ffffff;
     --foreground: #171717;
 
-    /* These are your default fallbacks */
+    /* Theme Colors */
     --site-1: #0b2f26;
     --site-2: #0f5e4a;
     --site-3: #f6f3ea;
     --site-4: #d4af37;
     --site-5: #111827;
-    --bg-url: url("/endless-constellation.svg");
 
+    /* Assets & Effects */
+    --bg-url: url("/endless-constellation.svg");
     --site-border: rgba(17, 24, 39, 0.1);
     --site-shadow: 0 12px 28px rgba(0, 0, 0, 0.18);
+
+    /* RGB channels for opacity usage (Tailwind v4 friendly) */
+    --site-4-rgb: 212, 175, 55;
 }
 
-/* Base Utility Classes */
-.site-color-1 {
-    background-color: var(--site-1);
-}
-.site-color-2 {
-    background-color: var(--site-2);
-}
-.site-color-3 {
-    background-color: var(--site-3);
-}
-.site-color-4 {
-    background-color: var(--site-4);
-}
-.site-color-5 {
-    background-color: var(--site-5);
+@media (prefers-color-scheme: dark) {
+    :root {
+        --background: #0a0a0a;
+        --foreground: #ededed;
+        --site-border: rgba(255, 255, 255, 0.1);
+    }
 }
 
+/* --- Base Styles --- */
+body {
+    background: var(--background);
+    color: var(--foreground);
+    @apply antialiased transition-colors duration-300;
+}
+
+/* --- Background Systems --- */
 .site-background {
-    /* Base color fallback */
     background-color: var(--site-5);
-
-    /* Dynamic Gradients */
     background-image:
         radial-gradient(circle at 18% 10%, var(--site-1), transparent 60%),
         radial-gradient(circle at 85% 15%, var(--site-2), transparent 70%),
@@ -47,12 +66,9 @@
             var(--site-4) 55%,
             var(--site-5) 100%
         );
-
     background-attachment: fixed;
-    background-blend-mode: normal;
 }
 
-/* SVG Overlay */
 .svg-background {
     background-image: var(--bg-url);
     background-size: cover;
@@ -60,43 +76,38 @@
     background-attachment: fixed;
 }
 
-/* UI Surfaces */
-.site-surface {
-    border: 1px solid var(--site-border);
-    box-shadow: var(--site-shadow);
-    color: var(--site-5);
+/* --- Urdu Typography --- */
+@font-face {
+    font-family: "UrduFont";
+    src: url("/fonts/Kasheeda.ttf") format("truetype");
+    font-display: swap;
 }
 
-.site-accent-text {
-    color: var(--site-4);
+.urdu-text {
+    font-family: "UrduFont", serif;
+    direction: rtl;
+    line-height: 1.8;
 }
 
-.site-border {
-    border: 1px solid var(--site-border);
+.urdu-bold-fake {
+    -webkit-text-stroke: 0.5px currentColor;
+    paint-order: stroke fill;
 }
 
-/* Tailwind Theme Mapping */
-@theme inline {
-    --color-background: var(--background);
-    --color-foreground: var(--foreground);
-    --font-sans: var(--font-geist-sans);
-    --font-mono: var(--font-geist-mono);
+/* --- Custom Scrollbar --- */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 4px;
+}
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background: var(--site-4);
+    border-radius: 10px;
 }
 
-@media (prefers-color-scheme: dark) {
-    :root {
-        --background: #0a0a0a;
-        --foreground: #ededed;
-    }
-}
-
-body {
-    background: var(--background);
-    color: var(--foreground);
-    font-family: Arial, Helvetica, sans-serif;
-}
-
-/* Flip Clock Logic */
+/* --- Utilities & 3D Hooks --- */
 @layer utilities {
     .perspective-1000 {
         perspective: 1000px;
@@ -110,33 +121,9 @@ body {
     .rotate-x-180 {
         transform: rotateX(180deg);
     }
-}
 
-/* Urdu Typography */
-@font-face {
-    font-family: "UrduFont";
-    src: url("/fonts/Kasheeda.ttf") format("truetype");
-    font-display: swap;
-    font-weight: normal;
-    font-style: normal;
-}
-
-.urdu-text {
-    font-family: "UrduFont", serif;
-    direction: rtl;
-    line-height: 1.8;
-    letter-spacing: 0;
-}
-
-.custom-scrollbar::-webkit-scrollbar {
-    width: 4px;
-}
-.custom-scrollbar::-webkit-scrollbar-track {
-    background: rgba(255, 255, 255, 0.05);
-    border-radius: 10px;
-}
-.custom-scrollbar::-webkit-scrollbar-thumb {
-    background: var(--site-4);
-    border-radius: 10px;
-    opacity: 0.5;
+    /* Simple helper for the active glow we discussed */
+    .active-glow {
+        box-shadow: 0 0 30px rgba(var(--site-4-rgb), 0.3);
+    }
 }

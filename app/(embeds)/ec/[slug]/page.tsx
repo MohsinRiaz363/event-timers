@@ -24,10 +24,5 @@ export default async function TimerPage({
     notFound();
   }
 
-  return (
-    <>
-      <Timer config={config} serverTimeMs={serverTimeMs} />
-      {config.events.length > 1 && <EventList config={config} />}
-    </>
-  );
+  return <EventList config={config} />;
 }

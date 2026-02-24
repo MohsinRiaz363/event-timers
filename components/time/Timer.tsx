@@ -92,10 +92,10 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
     <div
       className={`site-background svg-background w-full flex flex-col items-center justify-center p-4 sm:p-6 transition-all duration-1000 ${isUrduActive ? "urdu-text" : ""}`}
     >
-      <div className="flex flex-col items-center gap-8 sm:gap-10 p-6 sm:p-12 bg-black/40 backdrop-blur-3xl rounded-bl-4xl sm:rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-360 transition-all overflow-hidden">
+      <div className="flex flex-col items-center gap-8 sm:gap-10 p-6 sm:p-12 bg-black/40 backdrop-blur-3xl rounded-bl-4xl sm:rounded-[2.5rem] border border-white/10 shadow-2xl w-full max-w-7xl transition-all overflow-hidden">
         {/* Header */}
         <div className="text-center text-white">
-          <h2 className="text-[10px] sm:text-sm md:text-lg font-black text-(--site-4) uppercase tracking-[0.3em] mb-3 opacity-80">
+          <h2 className="text-[10px] sm:text-sm md:text-lg font-black text-site-4 uppercase tracking-[0.3em] mb-3 opacity-80">
             {title}
           </h2>
           <h3
@@ -103,14 +103,12 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
           >
             {currentEvent.name}
           </h3>
-          <p className="text-lg text-(--site-4)" dir="ltr">
+          <p className="text-lg text-site-4" dir="ltr">
             {isGracePeriod ? "Started at: " : "Ends at: "}
             <span className="text-neutral-200">
               {formatTimeDisplay(currentEvent.time)}
             </span>
-            <span className="ml-2 text-(--site-4) opacity-70">
-              ({timezone})
-            </span>
+            <span className="ml-2 text-site-4 opacity-70">({timezone})</span>
           </p>
         </div>
 
@@ -120,14 +118,14 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
             /* FIXED: Corrected the brackets for the variables here */
             <div className="animate-pulse text-center px-4 py-6 rounded-2xl bg-(--accent)/5 border border-(--accent)/20 w-full max-w-2xl">
               <p
-                className={`text-(--accent) leading-relaxed ${isUrduActive ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl font-medium"}`}
+                className={`text-accent leading-relaxed ${isUrduActive ? "text-2xl sm:text-4xl" : "text-xl sm:text-2xl font-medium"}`}
               >
                 {getGraceMessage(currentEvent.name)}
               </p>
             </div>
           ) : (
             <div
-              className="grid grid-cols-2 md:grid-cols-4 gap-y-10 place-items-center"
+              className="grid grid-cols-2 md:grid-cols-4 gap-x-2 gap-y-10 place-items-center"
               dir="ltr"
             >
               {renderUnit(timeLeft.days, "Days")}
@@ -144,7 +142,7 @@ export default function Timer({ config, serverTimeMs }: TimerProps) {
             className={`w-full pt-8 border-t border-white/5 flex flex-col sm:flex-row justify-between items-center px-2 sm:px-6 gap-6 text-[11px] sm:text-sm text-neutral-500 ${isUrduActive ? "sm:flex-row-reverse" : ""}`}
           >
             <div className="flex items-center gap-2">
-              <span className="uppercase tracking-tighter text-(--site-4)">
+              <span className="uppercase tracking-tighter text-site-4">
                 {isUrduActive ? "آگے:" : "Up Next:"}
               </span>
               <b className="text-neutral-300">{nextEvent.name}</b>

@@ -1,5 +1,5 @@
 "use client";
-import React from "react";
+import React, { forwardRef } from "react";
 import { formatTimeDisplay } from "@/components/time/timeUtils";
 
 interface EventRowProps {
@@ -8,87 +8,92 @@ interface EventRowProps {
   rightEvent?: { name: string; time: string; id: string };
   isActive: boolean;
   isUrdu: boolean | undefined;
+  dayTitle: string | undefined;
 }
 
-export default function EventRowItem({
-  dayNumber,
-  leftEvent,
-  rightEvent,
-  isActive,
-  isUrdu,
-}: EventRowProps) {
-  const formatDateLabel = (isoString: string) => {
-    const date = new Date(isoString);
-    const month = date.toLocaleString("default", { month: "short" });
-    const day = date.getDate();
-    return { month, day };
-  };
+const EventRowItem = forwardRef<HTMLDivElement, EventRowProps>(
+  ({ dayNumber, leftEvent, rightEvent, isActive, isUrdu, dayTitle }, ref) => {
+    const formatDateData = (isoString: string) => {
+      const date = new Date(isoString);
+      const month = date.toLocaleString(isUrdu ? "ur-PK" : "default", {
+        month: "short",
+      });
+      const day = date.getDate();
+      return { month, day };
+    };
 
-  const { month, day } = formatDateLabel(leftEvent.time);
+    const { month, day } = formatDateData(leftEvent.time);
 
-  return (
-    <div
-      className={`
-        relative flex flex-col p-4 rounded-3xl transition-all duration-500 border
+    return (
+      <div
+        ref={ref}
+        style={{
+          // Direct variable injection for better compatibility
+          backgroundColor: isActive
+            ? "var(--site-4-transparent, rgba(var(--site-4-rgb), 0.15))"
+            : "",
+          borderColor: isActive ? "var(--site-4)" : "",
+        }}
+        className={`relative flex flex-col p-5 rounded-4xl border transition-all duration-500 scroll-mt-10
         ${
           isActive
-            ? "bg-(--site-4)/15 border-(--site-4) shadow-[0_0_30px_rgba(var(--site-4-rgb),0.2)] scale-[1.05] z-10"
-            : "bg-black/20 border-white/10 hover:border-white/30"
-        }
-      `}
-    >
-      {/* HEADER: Day & Date side-by-side */}
-      <div className="flex items-center justify-between mb-6 gap-2">
+            ? "z-10 scale-[1.02] opacity-100 shadow-[0_0_30px_rgba(var(--site-4-rgb),0.3)]"
+            : "bg-black/20 border-white/10 opacity-50 hover:opacity-100 hover:border-white/20"
+        }`}
+      >
         <div
-          className={`flex items-center justify-center h-10 px-5 rounded-lg font-black text-sm xl:text-lg
-          ${isActive ? "bg-(--site-4) text-(--site-5)" : "bg-(--site-5) text-white"}`}
+          className={`flex items-center justify-between mb-4 ${isUrdu ? "flex-row-reverse" : ""}`}
         >
-          {dayNumber}
-        </div>
-        <div
-          className={`font-mono font-bold text-lg ${isActive ? "text-(--site-4)" : "text-white"}`}
-        >
-          {month} {day}
-        </div>
-      </div>
+          <div className="flex items-center gap-x-2 justify-center h-10 px-4 rounded-xl font-black text-sm bg-(--site-5) text-white shadow-lg">
+            <span>{dayTitle}</span> <span>{dayNumber}</span>
+          </div>
 
-      {/* BODY: Events List */}
-      <div className="flex flex-col gap-4">
-        {/* Left Event (e.g. Sehr) */}
-        <div className="flex flex-col">
-          <span
-            className={`text-[10px] uppercase tracking-widest font-black mb-1
-            ${isActive ? "text-(--site-4)" : "text-white"}`}
+          <div
+            className={`font-bold flex gap-x-2 text-lg transition-colors duration-500`}
+            style={{ color: isActive ? "var(--site-4)" : "white" }}
           >
-            {leftEvent.name}
-          </span>
-          <span
-            className={`text-2xl font-mono leading-none ${isActive ? "text-white" : "text-neutral-300"}`}
-          >
-            {formatTimeDisplay(leftEvent.time)}
-          </span>
+            <span>{day}</span> <span>{month}</span>
+          </div>
         </div>
 
-        {/* Divider if rightEvent exists */}
-        {rightEvent && <div className="h-px w-full bg-white/5" />}
-
-        {/* Right Event (e.g. Iftar) */}
-        {rightEvent && (
+        <div className="flex flex-col gap-4">
           <div className="flex flex-col">
             <span
-              className={`text-[10px] uppercase tracking-widest font-black mb-1
-              ${isActive ? "text-(--site-4)" : "text-white"}`}
+              className="text-[10px] uppercase tracking-widest mb-1 opacity-60"
+              style={{ color: isActive ? "var(--site-4)" : "white" }}
             >
-              {rightEvent.name}
+              {leftEvent.name}
             </span>
-            <span
-              className={`text-2xl font-mono leading-none ${isActive ? "text-white" : "text-neutral-300"}`}
-            >
-              {formatTimeDisplay(rightEvent.time)}
+            <span className="text-2xl font-mono text-white leading-none">
+              {formatTimeDisplay(leftEvent.time)}
             </span>
           </div>
-        )}
+
+          {rightEvent && (
+            <div
+              className="flex flex-col pt-3 border-t transition-colors"
+              style={{
+                borderTopColor: isActive
+                  ? "rgba(var(--site-4-rgb), 0.2)"
+                  : "rgba(255,255,255,0.05)",
+              }}
+            >
+              <span
+                className="text-[10px] uppercase tracking-widest mb-1 opacity-60"
+                style={{ color: isActive ? "var(--site-4)" : "white" }}
+              >
+                {rightEvent.name}
+              </span>
+              <span className="text-2xl font-mono text-white leading-none">
+                {formatTimeDisplay(rightEvent.time)}
+              </span>
+            </div>
+          )}
+        </div>
       </div>
-    </div>
-  );
-}
+    );
+  },
+);
+
+EventRowItem.displayName = "EventRowItem";
+export default EventRowItem;
